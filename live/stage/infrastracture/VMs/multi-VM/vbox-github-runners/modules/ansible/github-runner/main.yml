@@ -5,7 +5,7 @@
     - github_account: Android60-projects
     - runner_org: yes
     - runner_user: github_runner_user
-    - runner_state: "absent"
+    # - runner_state: "absent"
     - runner_labels:
         - virtualbox
         - molecule
