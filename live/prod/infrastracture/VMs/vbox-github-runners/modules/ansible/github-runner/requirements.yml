@@ -1,0 +1,8 @@
+---
+roles:
+  - name: monolithprojects.github_actions_runner
+  - name: monolithprojects.user_management
+  - name: android06.virtualbox
+    src: git+https://gitlab.myhomelab.xyz/ansible-roles/virtualbox-molecule-ansible
+  - name: android06.security
+    src: git+https://github.com/Android60-projects/ansible-role-security

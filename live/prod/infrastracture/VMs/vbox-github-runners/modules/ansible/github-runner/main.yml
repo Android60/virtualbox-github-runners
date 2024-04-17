@@ -1,0 +1,46 @@
+---
+- hosts: all
+  become: true
+  vars:
+    - github_account: Android60-projects
+    - runner_org: yes
+    - runner_user: github_runner_user
+  # - runner_state: "absent"
+    - runner_labels:
+        - virtualbox
+        - molecule
+    - user_management:
+      - name: github_runner_user
+    - jenkins_user: "github_runner_user"
+    - scripts_directory: "/opt/scripts"
+  roles:
+    - role: android06.security
+    - role: monolithprojects.user_management
+    - role: android06.virtualbox
+    - role: monolithprojects.github_actions_runner    
+  pre_tasks:
+    - name: Update apt cache (on Debian).
+      apt:
+        update_cache: true
+        cache_valid_time: 3600
+      when: ansible_os_family == 'Debian'
+
+  post_tasks:
+    - name: Create scripts directory
+      file:
+        path: "{{ scripts_directory }}"
+        state: directory
+        mode: '0755'
+
+    - name: Copy flush_vms to scripts directory
+      copy:
+        src: "scripts/flush_vms.sh"
+        dest: "{{ scripts_directory }}/"
+        mode: '0755'
+
+    - name: Add flush_vms script to crontab
+      ansible.builtin.cron:
+        name: "Flush VMs"
+        minute: "0"
+        hour: "0"
+        job: "{{ scripts_directory }}/flush_vms.sh"
