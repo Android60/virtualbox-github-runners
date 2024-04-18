@@ -47,7 +47,7 @@ module "proxmox_vm" {
 
 resource "null_resource" "ansible-provisioner" {
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.ssh_user} -i ansible/hosts.cfg modules/ansible/github-runner/main.yml"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ansible/hosts.cfg modules/ansible/github-runner/main.yml"
   }
   triggers = {
     ansible_playbook = filesha256("modules/ansible/github-runner/main.yml")
@@ -71,7 +71,8 @@ resource "local_file" "hosts_cfg" {
   content = templatefile("${path.module}/templates/hosts.tpl",
     {
       #servers = slice(split("/",(values(proxmox_lxc.webservers-lxc)[*].network[0].ip)[0]), 0, 1)
-      servers = { for k, inst in module.proxmox_vm : k => inst.ip_address[0] }
+      servers      = { for k, inst in module.proxmox_vm : k => inst.ip_address[0] }
+      ansible_user = var.ssh_user
     }
   )
   filename = "ansible/hosts.cfg"
