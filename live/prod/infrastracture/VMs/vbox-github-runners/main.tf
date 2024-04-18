@@ -56,6 +56,10 @@ resource "null_resource" "ansible-provisioner" {
     module.proxmox_vm,
     local_file.hosts_cfg
   ]
+  provisioner "local-exec" {
+    when    = destroy
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -e 'runner_state=absent' -i ansible/hosts.cfg modules/ansible/github-runner/main.yml"
+  }
 }
 
 resource "mikrotik_dns_record" "proxmox_vm" {
