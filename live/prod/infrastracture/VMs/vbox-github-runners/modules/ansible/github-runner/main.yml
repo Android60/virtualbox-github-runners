@@ -11,7 +11,7 @@
         - molecule
     - user_management:
       - name: github_runner_user
-    - jenkins_user: "github_runner_user"
+    - vbox_user: "github_runner_user"
     - scripts_directory: "/opt/scripts"
   roles:
     - role: android06.security
