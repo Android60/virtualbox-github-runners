@@ -53,7 +53,8 @@ resource "null_resource" "ansible-provisioner" {
     ansible_playbook = filesha256("modules/ansible/github-runner/main.yml")
   }
   depends_on = [
-    module.proxmox_vm
+    module.proxmox_vm,
+    local_file.hosts_cfg
   ]
 }
 
