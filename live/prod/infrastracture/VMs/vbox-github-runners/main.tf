@@ -47,7 +47,7 @@ module "proxmox_vm" {
 
 resource "null_resource" "ansible-provisioner" {
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ansible/hosts.cfg modules/ansible/github-runner/main.yml"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.ssh_user} -i ansible/hosts.cfg modules/ansible/github-runner/main.yml"
   }
   triggers = {
     ansible_playbook = filesha256("modules/ansible/github-runner/main.yml")
